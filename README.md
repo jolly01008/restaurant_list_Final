@@ -1,6 +1,6 @@
 # 我的餐廳清單
 
-![Index page about Restaurant List](./public/image/snapshot.png)
+![Index page about Restaurant List](https://github.com/jolly01008/restaurant_list/blob/main/我的餐廳清單畫面.JPG)
 
 ## 介紹
 
