@@ -61,6 +61,16 @@ app.get("/search", (req, res) => {
     .catch( err => console.log(err))
 })
 
+// ============新增餐廳頁面============
+app.get("/restaurant/new" , (req,res) => {
+  res.render("new")
+})
+
+app.post("/restaurants" , (req,res) => {
+  Restaurant.create(req.body)
+    .then(() => res.redirect('/') )
+    .catch(error => console.log (error))
+})
 
 //============伺服器監聽器============
 app.listen(port, () => {
