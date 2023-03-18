@@ -1,10 +1,11 @@
 const express = require("express")
 const app = express()
 const port = 3000
-//載入restaurant model
-const Restaurant = require("./models/Restaurant")
-//載入mongoose
-const mongoose = require("mongoose")
+const Restaurant = require("./models/Restaurant") //載入restaurant model
+const mongoose = require("mongoose") //載入mongoose
+const exphbs = require("express-handlebars")  //require express-handlebars
+const bodyParser = require('body-parser') //引用body-parser
+
 //引入dotenv
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config() }
@@ -12,8 +13,8 @@ if (process.env.NODE_ENV !== "production") {
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,useUnifiedTopology: true })
 
-//設定db並且監聽
-const db = mongoose.connection;
+
+const db = mongoose.connection //設定db並且監聽
 db.on("error", () => {
   console.log("mongodb Error!")
 })
@@ -21,18 +22,11 @@ db.once("open", () => {
   console.log("mongodb connected!")
 })
 
-//require express-handlebars
-const exphbs = require("express-handlebars")
-// const restaurantData = require("./restaurant.json").results
 //setting template engine，設定模板引擎
 app.engine("handlebars", exphbs({ defaultLayout: "main" }))
 app.set("view engine", "handlebars")
-//引用body-parser
-const bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({extended: true}))
-
-//setting static files
-app.use(express.static("public"))
+app.use(bodyParser.urlencoded({extended: true})) //body-parser
+app.use(express.static("public")) //setting static files
 
 //============index頁面路由設定============
 app.get("/", (req, res) => {
@@ -52,19 +46,20 @@ app.get("/restaurants/:restaurantId", (req, res) => {
     .catch( err => console.log(err))
 });
 
-//============search頁面路由設定============
+//============搜尋特定清單============
 app.get("/search", (req, res) => {
   //req.query，可抓取瀏覽器輸入的內容，也就是網址中?後面的資訊
-  const searchword = req.query.keyword.trim().toLowerCase()
-  const searchRestaurant = restaurantData.filter((data) => {
-    return (
-      data.name.toLowerCase().includes(searchword) ||
-      data.category.includes(searchword)) })
-  res.render("index", {
-    restaurants: searchRestaurant,
-    keywords: req.query.keyword })
+  const Keyword = req.query.keywords.trim().toLowerCase()
+  Restaurant.find({})
+    .lean()
+    .then( restaurantsData => {
+     const searchRestaurant = restaurantsData.filter(
+        data => data.name.toLowerCase().includes(Keyword) ||
+        data.category.includes(Keyword) )
+     res.render("index",{ restaurantsData:searchRestaurant , wordValue:req.query.keywords})
+    })
+    .catch( err => console.log(err))
 })
-
 
 
 //============伺服器監聽器============
