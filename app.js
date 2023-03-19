@@ -103,6 +103,16 @@ app.post("/restaurants/:restaurantId/edit" , (req,res) =>{
   .catch( error => { console.log(error) })
 })
 
+//刪除餐廳
+app.post("/restaurants/:restaurantId/delete", (req,res) => {
+  const id = req.params.restaurantId
+  Restaurant.findById(id)
+    .then( restaurantData => restaurantData.remove() )
+    .then( () => res.redirect("/") )
+    .catch( error => { console.log(error) })
+})
+
+
 //============伺服器監聽器============
 app.listen(port, () => {
   console.log(`Express is running on http://localhost:${port}`);
