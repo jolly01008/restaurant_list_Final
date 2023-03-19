@@ -12,14 +12,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const Schema = mongoose.Schema;
 const Restaurant_list = new Schema({
-  name: {
-    type: String,
-    requird: true,
-  },
-  name_en: {
-    type: String,
-    requird: true,
-  },
+  name: { type: String, requird: true },
+  name_en: { type: String, requird: true },
   category: { type: String, required: true },
   image: { type: String, required: true },
   location: { type: String, required: true },

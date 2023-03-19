@@ -30,7 +30,7 @@ app.use(express.static("public")) //setting static files
 
 //============index頁面路由設定============
 app.get("/", (req, res) => {
-  Restaurant.find({}) //重要!!!!用find()叫 restaurant model 去MongoDB資料庫找資料，並讀取
+  Restaurant.find({}) //用find()叫 restaurant model 去MongoDB資料庫找資料，並讀取
     .lean()
     .then( restaurantsData => res.render("index", { restaurantsData }))
     .catch( err => console.log(err))
@@ -66,10 +66,41 @@ app.get("/restaurant/new" , (req,res) => {
   res.render("new")
 })
 
+//新增餐廳
 app.post("/restaurants" , (req,res) => {
   Restaurant.create(req.body)
     .then(() => res.redirect('/') )
     .catch(error => console.log (error))
+})
+
+// ============編輯頁面路由============
+app.get("/restaurants/:restaurantId/edit" , (req,res) => {
+  //載入該餐廳資料再提供修改。運用req.params抓取變數取得資訊
+  const id = req.params.restaurantId
+  Restaurant.findById(id)
+  .lean()
+  .then( restaurantData => res.render("edit",{restaurantData}))
+})
+
+//編輯餐廳
+app.post("/restaurants/:restaurantId/edit" , (req,res) =>{
+  const id = req.params.restaurantId
+  const editData = req.body
+  Restaurant.findById(id)
+  .then( restaurantData => { 
+    restaurantData.name = editData.name
+    restaurantData.name_en = editData.name_en
+    restaurantData.category = editData.category
+    restaurantData.image = editData.image
+    restaurantData.location = editData.location
+    restaurantData.phone = editData.phone
+    restaurantData.google_map = editData.google_map
+    restaurantData.rating = editData.rating
+    restaurantData.description = editData.description
+    restaurantData.save()
+   })
+  .then( () => res.redirect(`/restaurants/${id}`))
+  .catch( error => { console.log(error) })
 })
 
 //============伺服器監聽器============
