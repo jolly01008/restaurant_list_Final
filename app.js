@@ -62,7 +62,7 @@ app.get("/search", (req, res) => {
 })
 
 // ============新增餐廳頁面============
-app.get("/restaurant/new" , (req,res) => {
+app.get("/restaurant/new" , (req, res) => {
   res.render("new")
 })
 
@@ -86,19 +86,10 @@ app.get("/restaurants/:restaurantId/edit" , (req,res) => {
 app.post("/restaurants/:restaurantId/edit" , (req,res) =>{
   const id = req.params.restaurantId
   const editData = req.body
-  Restaurant.findById(id)
-  .then( restaurantData => { 
-    restaurantData.name = editData.name
-    restaurantData.name_en = editData.name_en
-    restaurantData.category = editData.category
-    restaurantData.image = editData.image
-    restaurantData.location = editData.location
-    restaurantData.phone = editData.phone
-    restaurantData.google_map = editData.google_map
-    restaurantData.rating = editData.rating
-    restaurantData.description = editData.description
-    restaurantData.save()
-   })
+
+  //使用findByIdAndUpdate
+  Restaurant.findByIdAndUpdate(id , editData)
+
   .then( () => res.redirect(`/restaurants/${id}`))
   .catch( error => { console.log(error) })
 })
