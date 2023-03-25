@@ -1,17 +1,19 @@
 # 我的餐廳清單
 
-![Index page about Restaurant List](https://github.com/jolly01008/restaurant_list/blob/main/我的餐廳清單畫面.JPG)
+![Index page about Restaurant List](https://github.com/jolly01008/restaurant_list_CRUD/blob/main/餐廳清單擴充CRUD截圖.png)
 
 ## 介紹
 
-紀錄屬於自己的餐廳清單，可以瀏覽餐廳、查看詳細資訊、甚至連結到地圖。
+紀錄屬於自己的餐廳清單，可以瀏覽餐廳、查看詳細資訊、查詢、新增、編輯、刪除餐廳
 
 ### 功能
 
 - 查看所有餐廳
 - 瀏覽餐廳的詳細資訊
-- 連結餐廳的地址到 Google 地圖
 - 搜尋特定餐廳
+- 新增餐廳
+- 編輯餐廳
+- 刪除餐廳
 
 ## 開始使用
 
@@ -43,8 +45,14 @@
 
 ## 開發工具
 
-- Node.js 10.15.0
-- Express 4.17.1
-- Express-Handlebars 5.3.3
-- Bootstrap 5.2.1
-- Font-awesome 5.8.1
+- Node.js 14.16.0
+- Express 4.16.4
+- Express-Handlebars 3.0.0
+- Bootstrap
+- Font-awesome
+
+- MongoDB
+- mongoose 5.9.7
+
+-body-parser 1.20.2
+-dotenv 16.0.3
