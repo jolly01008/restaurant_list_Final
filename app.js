@@ -7,6 +7,8 @@ const exphbs = require("express-handlebars")  //require express-handlebars
 const bodyParser = require('body-parser') //引用body-parser
 const methodOverride = require("method-override") //載入body-parser
 
+const routes = require('./routes') //引用總路由器
+
 //引入dotenv
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config() }
@@ -23,89 +25,13 @@ db.once("open", () => {
   console.log("mongodb connected!")
 })
 
-
 app.engine("handlebars", exphbs({ defaultLayout: "main" })) //setting template engine，設定模板引擎
 app.set("view engine", "handlebars")
 app.use(bodyParser.urlencoded({extended: true})) //body-parser
 app.use(express.static("public")) //setting static files
 app.use(methodOverride("_method"))
 
-// ============新增餐廳頁面============
-app.get("/restaurants/new" , (req, res) => {
-  res.render("new")
-})
-
-//============index頁面路由設定============
-app.get("/", (req, res) => {
-  const sortBy = req.query.sortBy || "_id";  //使用者若沒做選擇(req.qurey.sortBy沒東西)，那 sortBy = "_id"
-  Restaurant.find({}) //用find()叫 restaurant model 去MongoDB資料庫找資料，並讀取
-    .sort(sortBy) // 把sortBy做為參數，代入sort()去做排列
-    .lean()
-    .then( restaurantsData => res.render("index", { restaurantsData , sortBy }))
-    .catch( err => console.log(err))
-});
-
-//============show頁面路由設定============
-app.get("/restaurants/:restaurantId", (req, res) => {
-  const id = req.params.restaurantId //req.params，可抓取路由的變數資訊
-  Restaurant.findById(id)
-    .lean()
-    .then(restaurantData => res.render("show", { restaurantData }))
-    .catch( err => console.log(err))
-});
-
-//搜尋特定清單
-app.get("/search", (req, res) => {
-  const Keyword = req.query.keywords.trim().toLowerCase() //req.query，可抓取瀏覽器輸入的內容，也就是網址中?後面的資訊
-  const sortBy = req.query.sortBy || "_id";  //使用者若沒做選擇(req.qurey.sortBy沒東西)，那 sortBy = "_id"
-  Restaurant.find({})
-    .lean()
-    .sort(sortBy) // 把sortBy做為參數，代入sort()去做排列
-    .then( restaurantsData => {
-     const searchRestaurant = restaurantsData.filter(
-        data => data.name.toLowerCase().includes(Keyword) ||
-        data.category.includes(Keyword) )
-     res.render("index",{ restaurantsData:searchRestaurant , wordValue:req.query.keywords , sortBy })
-    })
-    .catch( err => console.log(err))
-})
-
-//新增餐廳
-app.post("/restaurants" , (req,res) => {
-  Restaurant.create(req.body)
-    .then(() => res.redirect('/') )
-    .catch(error => console.log (error))
-})
-
-// ============編輯頁面路由============
-app.get("/restaurants/:restaurantId/edit" , (req,res) => {
-  const id = req.params.restaurantId //載入該餐廳資料再提供修改。運用req.params抓取變數取得資訊
-  Restaurant.findById(id)
-  .lean()
-  .then( restaurantData => res.render("edit",{restaurantData}))
-})
-
-//編輯餐廳
-app.put("/restaurants/:restaurantId" , (req,res) =>{
-  const id = req.params.restaurantId
-  const editData = req.body
-
-  //使用findByIdAndUpdate
-  Restaurant.findByIdAndUpdate(id , editData)
-
-  .then( () => res.redirect(`/restaurants/${id}`))
-  .catch( error => { console.log(error) })
-})
-
-//刪除餐廳
-app.delete("/restaurants/:restaurantId", (req,res) => {
-  const id = req.params.restaurantId
-  Restaurant.findById(id)
-    .then( restaurantData => restaurantData.remove() )
-    .then( () => res.redirect("/") )
-    .catch( error => { console.log(error) })
-})
-
+app.use(routes) //將request導入總路由器
 
 //============伺服器監聽器============
 app.listen(port, () => {
