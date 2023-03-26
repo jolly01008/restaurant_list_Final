@@ -1,16 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
 
-if (process.env.NODE_ENV !== "process") {
-  require("dotenv").config();
-}
-
-//設定連線到mongoDB，與資料庫連線
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-const Schema = mongoose.Schema;
 const Restaurant_list = new Schema({
   name: { type: String, required: true },
   name_en: { type: String, required: true },
