@@ -10,7 +10,7 @@ router.get('/login',(req,res) =>{
 router.post('/login',
  passport.authenticate('local', {
   successRedirect: '/',
-  failureRedirect: 'users/login'
+  failureRedirect: '/users/login'
  })
 )
 
@@ -43,6 +43,11 @@ router.post('/register',(req,res) =>{
     }
   })
   .catch(err => console.log(err))
+})
+
+router.get('/logout',(req, res) => {
+  req.logout()  // req.logout 是passport.js提供的函式，會自動把使用者登入狀態清掉，幫你清除session
+  res.redirect('/users/login')
 })
 
 module.exports = router
