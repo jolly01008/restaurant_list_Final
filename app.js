@@ -7,6 +7,7 @@ const bodyParser = require('body-parser') //引用body-parser
 const methodOverride = require("method-override") //載入body-parser
 
 const routes = require('./routes') //引用總路由器
+const usePassport = require('./config/passport') //匯入Passport設定檔
 require('./config/mongoose') // 載入mongoose
 
 
@@ -22,6 +23,9 @@ app.use(session({
 app.use(bodyParser.urlencoded({extended: true})) //body-parser
 app.use(express.static("public")) //setting static files
 app.use(methodOverride("_method"))
+
+usePassport(app) //調用usePassport函式
+
 app.use(routes) //將request導入總路由器
 
 //伺服器監聽器
