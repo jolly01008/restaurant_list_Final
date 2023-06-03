@@ -1,4 +1,5 @@
 const express = require("express")
+const session = require("express-session")
 const app = express()
 const port = 3000
 const exphbs = require("express-handlebars")  //require express-handlebars
@@ -11,6 +12,13 @@ require('./config/mongoose') // 載入mongoose
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" })) //setting template engine，設定模板引擎
 app.set("view engine", "handlebars")
+
+app.use(session({
+  secret: 'ThisIsMySecret',
+  resave: false,
+  saveUninitalized: true
+}))
+
 app.use(bodyParser.urlencoded({extended: true})) //body-parser
 app.use(express.static("public")) //setting static files
 app.use(methodOverride("_method"))
