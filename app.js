@@ -12,8 +12,9 @@ const usePassport = require('./config/passport') //匯入Passport設定檔
 require('./config/mongoose') // 載入mongoose
 
 
-app.engine("handlebars", exphbs({ defaultLayout: "main" })) //setting template engine，設定模板引擎
-app.set("view engine", "handlebars")
+app.engine("hbs", exphbs({ defaultLayout: "main", extname: "hbs"})) //setting template engine，設定模板引擎
+app.set("view engine", "hbs")
+
 
 app.use(session({
   secret: 'ThisIsMySecret',
