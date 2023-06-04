@@ -7,7 +7,7 @@ if (process.env.NODE_ENV !== "production") {
 
 //設定連線到mongoDB，與資料庫連線
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,useUnifiedTopology: true })
+  useNewUrlParser: true,useUnifiedTopology: true , useCreateIndex: true})
 
 const db = mongoose.connection //設定db並且監聽
 
