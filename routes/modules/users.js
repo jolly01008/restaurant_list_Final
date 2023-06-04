@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const User = require("../../models/User")
 const passport = require('passport') //引用passport
+const bcrypt = require('bcryptjs') //載入bcryptjs套件
 
 router.get('/login',(req,res) =>{
   res.render('login')
@@ -14,11 +15,9 @@ router.post('/login',
  })
 )
 
-
 router.get('/register',(req,res) =>{
   res.render('register')
 })
-
 
 router.post('/register',(req,res) =>{
   const {name , email , password , confirmPassword} = req.body
@@ -48,17 +47,19 @@ router.post('/register',(req,res) =>{
         password, 
         confirmPassword
       })
-    }else{
-      return User.create({
-        name, 
-        email, 
-        password, 
-      })
-      .then(() => res.redirect('/'))
-      .catch(err => console.log(err))
     }
+    return bcrypt
+      .genSalt(10)
+      .then(salt =>
+        bcrypt.hash(password , salt))
+      .then(hash => User.create({
+        name,
+        email,
+        password: hash //雜湊值取代原本的使用者密碼
+      }))
+      .then(()=> res.redirect('/'))
+      .catch(err => console.log(err))
   })
-  .catch(err => console.log(err))
 })
 
 router.get('/logout',(req, res) => {
