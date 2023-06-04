@@ -44,7 +44,6 @@ router.put("/:restaurantId" , (req,res) =>{
   const userId = req.user._id
   const _id = req.params.restaurantId
   const editData = req.body
-  console.log('editData:', editData)
   Restaurant.findOneAndUpdate({_id , userId } , editData)
    .then( () => res.redirect(`/restaurants/${_id}`))
    .catch( error => { console.log(error) })
