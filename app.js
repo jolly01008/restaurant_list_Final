@@ -7,6 +7,9 @@ const bodyParser = require('body-parser') //引用body-parser
 const methodOverride = require("method-override") //載入body-parser
 const flash = require('connect-flash') //引入connect-flash
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config() }
+
 const routes = require('./routes') //引用總路由器
 const usePassport = require('./config/passport') //匯入Passport設定檔
 require('./config/mongoose') // 載入mongoose
@@ -17,9 +20,9 @@ app.set("view engine", "hbs")
 
 
 app.use(session({
-  secret: 'ThisIsMySecret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitalized: true
+  saveUninitialized: true
 }))
 
 app.use(bodyParser.urlencoded({extended: true})) //body-parser
